@@ -18,14 +18,14 @@ int main(void)
 
     if (write(fd, text1, 5) == -1)
     {
-        perror(text1);
+        perror("f1.txt");
     }
 
     if (write(fd, text2, 5) == -1)
     {
-        perror(text1);
+        perror("f1.txt");
     }
-    
+
     close(fd);
     return 0;
 }
