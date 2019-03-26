@@ -1,38 +1,49 @@
-#include<stdio.h> 
-#include<stdlib.h>
-#include<unistd.h> 
-#include<sys/types.h> 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
 
-#define READ 0 
+#define READ 0
 #define WRITE 1
 
-int main(void) {
-    int fd[2];
-    pid_t  pid;
+struct numbers
+{
+    int no1;
+    int no2;
+}; 
 
-    if (pipe(fd) == -1) {
+int main(void)
+{
+    int fd[2];
+    pid_t pid;
+
+    if (pipe(fd) == -1)
+    {
         perror("Pipe Error");
         exit(1);
     }
 
-    if ((pid = fork()) > 0) {
-        int a[2];
+    if ((pid = fork()) > 0)
+    {
+        struct numbers input;
         printf("Parent:\n");
         printf(" x y ? ");
-        if (scanf("%d %d", &a[0], &a[1]) == EOF) {
+        if (scanf("%d %d", &input.no1, &input.no2) == EOF)
+        {
             perror("Input Error");
             exit(2);
         }
         close(fd[READ]);
-        write(fd[WRITE], a, 2 * sizeof(int));
+        write(fd[WRITE], &input, sizeof(struct numbers));
         close(fd[WRITE]);
     }
-    else {
-        int b[2];
+    else
+    {
+        struct numbers output;
         close(fd[WRITE]);
-        read(fd[READ], b, 2 * sizeof(int));
+        read(fd[READ], &output, sizeof(struct numbers));
         printf("Son:\n");
-        printf("x + y = %d\n", b[0] + b[1]);
+        printf("x + y = %d\n", output.no1 + output.no2);
         close(fd[READ]);
     }
     return 0;
