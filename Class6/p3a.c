@@ -19,5 +19,5 @@ int main()
         printf("Creating thread %d\n", t);
         pthread_create(&threads[t], NULL, PrintHello, &args[t]);
     }
-    pthread_exit(0);
+    pthread_exit(0); //exit não garante que a outra thread acabe
 }
