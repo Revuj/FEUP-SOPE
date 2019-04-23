@@ -13,14 +13,20 @@ void *thrfunc(void *arg)
 {
     int i = 0;
     fprintf(stderr, "Starting thread %s\n", (char *)arg);
-    while (N > 0) {
+    while (1)
+    {
         pthread_mutex_lock(&mut);
+        if (N <= 0)
+        {
+            pthread_mutex_unlock(&mut);
+            break;
+        }
         i++;
         N--;
         pthread_mutex_unlock(&mut);
     }
-    void * ret = malloc(sizeof(int));
-    *(int *) ret = i;
+    void *ret = malloc(sizeof(int));
+    *(int *)ret = i;
     return ret;
 }
 int main()
@@ -30,8 +36,8 @@ int main()
     pthread_create(&ta, NULL, thrfunc, &arg);
     char arg2 = '2';
     pthread_create(&tb, NULL, thrfunc, &arg2);
-    void * reta;
-    void * retb;
+    void *reta;
+    void *retb;
     pthread_join(ta, &reta);
     pthread_join(tb, &retb);
     printf("T1 = %d\n", *(int *)reta);
