@@ -16,6 +16,7 @@ int main(void)
     for (i = 1; i <= 3; i++)
     {
         pid = fork();
+        
 
         if (pid == 0)
         {
